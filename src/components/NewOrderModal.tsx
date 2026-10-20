@@ -6,6 +6,7 @@ import { Order, OrderItem, OrderPriority, OrderType, PaymentMethod, PaymentStatu
 import { POPULAR_LOCATIONS } from '@/lib/constants';
 import { formatRupiah } from '@/lib/hpp';
 import { useAlert } from '@/components/ui/CustomAlert';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 
 interface NewOrderModalProps {
   isOpen: boolean;
@@ -274,40 +275,40 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
           {/* Payment & Priority Settings */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label className="block font-semibold text-[#5A3E2C] mb-1">Prioritas Pesanan</label>
-              <select
+              <CustomSelect
+                label="Prioritas Pesanan"
                 value={priority}
-                onChange={(e) => setPriority(e.target.value as any)}
-                className="w-full px-2.5 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
-              >
-                <option value="normal">Normal</option>
-                <option value="high">Prioritas Tinggi (Jam Tertentu)</option>
-                <option value="urgent">Mendesak / Urgent</option>
-              </select>
+                onChange={(val) => setPriority(val as any)}
+                options={[
+                  { value: 'normal', label: 'Normal / Reguler' },
+                  { value: 'high', label: 'Prioritas (Jam Khusus)', badge: 'Prioritas ⚡', badgeColor: 'bg-amber-100 text-amber-800' },
+                  { value: 'urgent', label: 'Mendesak / Cepat', badge: 'Urgent 🔥', badgeColor: 'bg-rose-100 text-rose-800' },
+                ]}
+              />
             </div>
             <div>
-              <label className="block font-semibold text-[#5A3E2C] mb-1">Metode Bayar</label>
-              <select
+              <CustomSelect
+                label="Metode Bayar"
                 value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value as any)}
-                className="w-full px-2.5 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
-              >
-                <option value="TF">Transfer BCA</option>
-                <option value="CASH">Tunai (Cash)</option>
-                <option value="QRIS">QRIS</option>
-              </select>
+                onChange={(val) => setPaymentMethod(val as any)}
+                options={[
+                  { value: 'TF', label: 'Transfer BCA' },
+                  { value: 'CASH', label: 'Tunai (Cash)' },
+                  { value: 'QRIS', label: 'QRIS' },
+                ]}
+              />
             </div>
             <div>
-              <label className="block font-semibold text-[#5A3E2C] mb-1">Status Pembayaran</label>
-              <select
+              <CustomSelect
+                label="Status Pembayaran"
                 value={paymentStatus}
-                onChange={(e) => setPaymentStatus(e.target.value as any)}
-                className="w-full px-2.5 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
-              >
-                <option value="lunas">LUNAS (Disetujui)</option>
-                <option value="menunggu_konfirmasi">Menunggu Konfirmasi</option>
-                <option value="menunggu_pembayaran">Belum Bayar</option>
-              </select>
+                onChange={(val) => setPaymentStatus(val as any)}
+                options={[
+                  { value: 'lunas', label: 'LUNAS (Disetujui)', badge: 'Lunas', badgeColor: 'bg-emerald-100 text-emerald-800' },
+                  { value: 'menunggu_konfirmasi', label: 'Menunggu Konfirmasi', badge: 'Pending', badgeColor: 'bg-amber-100 text-amber-800' },
+                  { value: 'menunggu_pembayaran', label: 'Belum Bayar' },
+                ]}
+              />
             </div>
           </div>
 

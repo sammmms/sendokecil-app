@@ -6,6 +6,7 @@ import { HPPComponent, Product } from '@/types';
 import { calculateProductHpp, formatRupiah } from '@/lib/hpp';
 import { CurrencyInput } from '@/components/ui/CurrencyInput';
 import { useAlert } from '@/components/ui/CustomAlert';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 
 interface HppManagerModalProps {
   isOpen: boolean;
@@ -164,17 +165,17 @@ export function HppManagerModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-[#5A3E2C] mb-1">Kategori</label>
-                  <select
+                  <CustomSelect
+                    label="Kategori"
                     value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value as any)}
-                    className="w-full px-2 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
-                  >
-                    <option value="bahan_baku">Bahan Baku</option>
-                    <option value="kemasan">Kemasan / Sendok</option>
-                    <option value="operasional">Operasional</option>
-                    <option value="lainnya">Lainnya</option>
-                  </select>
+                    onChange={(val) => setNewCategory(val as any)}
+                    options={[
+                      { value: 'bahan_baku', label: 'Bahan Baku' },
+                      { value: 'kemasan', label: 'Kemasan / Sendok' },
+                      { value: 'operasional', label: 'Operasional' },
+                      { value: 'lainnya', label: 'Lainnya' },
+                    ]}
+                  />
                 </div>
                 <div>
                   <label className="block text-[11px] font-semibold text-[#5A3E2C] mb-1">Biaya (Rp)</label>

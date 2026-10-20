@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Order } from '@/types';
 import { formatRupiah } from '@/lib/hpp';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 
 interface DeliveryRoutesViewProps {
   orders: Order[];
@@ -324,22 +325,18 @@ export function DeliveryRoutesView({
                         <Tag className="w-3.5 h-3.5" />
                       </button>
 
-                      <select
-                        value={ord.fulfillmentStatus}
-                        onChange={(e) => onUpdateStatus(ord.id, e.target.value as any)}
-                        className={`text-xs font-semibold py-1.5 px-2.5 rounded-xl border transition ${
-                          ord.fulfillmentStatus === 'selesai'
-                            ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                            : ord.fulfillmentStatus === 'siap'
-                            ? 'bg-blue-50 border-blue-300 text-blue-800'
-                            : 'bg-white border-[#DCCBB8] text-[#5A3E2C]'
-                        }`}
-                      >
-                        <option value="menunggu">Menunggu</option>
-                        <option value="diproses">Sedang Dipacking</option>
-                        <option value="siap">Siap Diantar</option>
-                        <option value="selesai">Selesai / Terkirim</option>
-                      </select>
+                      <div className="w-36">
+                        <CustomSelect
+                          value={ord.fulfillmentStatus}
+                          onChange={(val) => onUpdateStatus(ord.id, val as any)}
+                          options={[
+                            { value: 'menunggu', label: 'Menunggu' },
+                            { value: 'diproses', label: 'Dipacking', badge: 'Proses' },
+                            { value: 'siap', label: 'Siap Diantar', badge: 'Siap', badgeColor: 'bg-blue-100 text-blue-800' },
+                            { value: 'selesai', label: 'Selesai', badge: 'Terkirim', badgeColor: 'bg-emerald-100 text-emerald-800' },
+                          ]}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}
