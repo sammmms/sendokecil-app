@@ -235,6 +235,30 @@ export function LandingPageView({
             <span className="font-semibold leading-tight">QRIS & Transfer BCA</span>
           </div>
         </div>
+
+        {/* SEO Crawlable Semantic Content for Google Indexing */}
+        <section className="sr-only">
+          <h2>Kue Gabin Fla Premium Lumer di Medan</h2>
+          <p>
+            Selamat datang di SENDOKecil EST 2026, spesialis kue gabin fla premium terenak di Medan.
+            Nikmati biskuit malkist gabin renyah gurih berpadu dengan fla susu lembut lumer di lidah,
+            tersedia dalam aneka varian rasa favorit keluarga.
+          </p>
+          <h3>Pilihan Varian Rasa Gabin Fla SENDOKecil:</h3>
+          <ul>
+            {products.map((p) => (
+              <li key={p.id}>
+                <strong>{p.name}</strong> - {p.description || p.tagline} (Harga: {formatRupiah(p.price)})
+              </li>
+            ))}
+          </ul>
+          <h3>Pengantaran & Pemesanan Online di Medan:</h3>
+          <p>
+            Melayani pesanan online untuk harian, snack box kantor, acara arisan, hampers ulang tahun,
+            dan oleh-oleh khas Medan. Mendukung pengantaran via kurir instan serta ambil langsung di tempat.
+            Pembayaran mudah dan otomatis menggunakan QRIS dan Transfer Bank BCA.
+          </p>
+        </section>
       </div>
 
       {/* Footer Navigation */}
