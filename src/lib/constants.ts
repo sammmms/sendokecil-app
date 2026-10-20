@@ -7,6 +7,14 @@ export const STORE_CONFIG: StoreConfig = {
   bcaAccount: process.env.NEXT_PUBLIC_BCA_ACCOUNT || '7985566224',
   bcaHolder: process.env.NEXT_PUBLIC_BCA_NAME || 'ANGGI',
   qrisName: process.env.NEXT_PUBLIC_QRIS_NAME || 'SENDOKECIL - FOOD',
+  instagram: process.env.NEXT_PUBLIC_STORE_INSTAGRAM || 'sendokecil',
+  instagramUrl: process.env.NEXT_PUBLIC_STORE_INSTAGRAM_URL || 'https://instagram.com/sendokecil',
+  whatsappUrl:
+    process.env.NEXT_PUBLIC_STORE_WA_URL ||
+    'https://wa.me/6281377493907?text=Halo%20SENDOKecil%2C%20saya%20mau%20pesan%20kue%20gabin%20fla%20premiumnya%20%E2%9C%A8',
+  location: 'Medan & Sekitarnya',
+  openingHours: 'Setiap Hari 08.00 - 20.00 WIB',
+  taglineQuote: '“Crispy crackers, rich melted fla, pure happiness in every bite 🧇✨”',
 };
 
 export const OFFICIAL_QRIS_IMAGE = '/images/qris-official.png';

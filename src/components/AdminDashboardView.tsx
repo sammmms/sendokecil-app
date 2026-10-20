@@ -24,6 +24,7 @@ import {
   ShoppingBag,
   Database,
   Layers,
+  Sparkles,
 } from 'lucide-react';
 import { HPPComponent, Order, Product } from '@/types';
 import { formatNumber, formatRupiah } from '@/lib/hpp';
@@ -55,6 +56,7 @@ interface AdminDashboardViewProps {
   onDeleteHppComponent: (id: string) => Promise<void>;
   onLogout: () => void;
   onSwitchToCustomer: () => void;
+  onSwitchToLanding?: () => void;
 }
 
 export function AdminDashboardView({
@@ -72,6 +74,7 @@ export function AdminDashboardView({
   onDeleteHppComponent,
   onLogout,
   onSwitchToCustomer,
+  onSwitchToLanding,
 }: AdminDashboardViewProps) {
   const { showConfirm, showToast } = useAlert();
   const [activeTab, setActiveTab] = useState<'orders' | 'routes' | 'analytics'>('orders');
@@ -209,6 +212,18 @@ export function AdminDashboardView({
 
           {/* Quick Header Navigation */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {onSwitchToLanding && (
+              <button
+                type="button"
+                onClick={onSwitchToLanding}
+                className="py-1.5 px-2.5 sm:px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+                title="Lihat Landing Page"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#8C5326]" />
+                <span className="hidden sm:inline">Landing Page</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={onSwitchToCustomer}

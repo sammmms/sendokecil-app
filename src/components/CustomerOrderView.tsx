@@ -23,6 +23,7 @@ import {
   AlertCircle,
   ExternalLink,
   Maximize2,
+  ArrowLeft,
 } from 'lucide-react';
 import { Order, OrderItem, OrderType, Product } from '@/types';
 import { OFFICIAL_QRIS_IMAGE, POPULAR_LOCATIONS, STORE_CONFIG } from '@/lib/constants';
@@ -35,9 +36,17 @@ interface CustomerOrderViewProps {
   products: Product[];
   onOrderPlaced?: (order: Order) => void;
   onOpenOwnerLogin: () => void;
+  onBackToLanding?: () => void;
+  preselectedProductId?: string;
 }
 
-export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }: CustomerOrderViewProps) {
+export function CustomerOrderView({
+  products,
+  onOrderPlaced,
+  onOpenOwnerLogin,
+  onBackToLanding,
+  preselectedProductId,
+}: CustomerOrderViewProps) {
   const { showAlert, showToast } = useAlert();
   // Form states
   const [customerName, setCustomerName] = useState('');
@@ -51,6 +60,13 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
   const [cart, setCart] = useState<{ [productId: string]: number }>({
     'choco-oreo': 1,
   });
+
+  // Preselected product from Landing Page
+  useEffect(() => {
+    if (preselectedProductId) {
+      setCart({ [preselectedProductId]: 1 });
+    }
+  }, [preselectedProductId]);
 
   // Payment states
   const [markedPaid, setMarkedPaid] = useState(false);
@@ -470,21 +486,50 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
   return (
     <div className="max-w-md mx-auto min-h-screen bg-[#FAF7F2] pb-24 text-[#2D1E16]">
       {/* Brand Header */}
-      <header className="sticky top-0 z-30 bg-[#FAF7F2]/95 backdrop-blur-md px-4 py-3 border-b border-[#E8DEC8] flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <img src="/icon.png" alt="SENDOKecil" className="w-9 h-9 rounded-full object-cover shadow-sm border border-[#E0D0BE]" />
+      <header className="sticky top-0 z-30 bg-[#FAF7F2]/95 backdrop-blur-md px-3.5 py-2.5 border-b border-[#E8DEC8] flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {onBackToLanding && (
+            <button
+              type="button"
+              onClick={onBackToLanding}
+              title="Kembali ke Beranda"
+              className="p-1.5 -ml-1 rounded-xl text-[#7A5B45] hover:text-[#3E271B] hover:bg-[#F3ECE0] transition"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+          )}
+          <img
+            src="/icon.png"
+            alt="SENDOKecil"
+            className="w-8 h-8 rounded-xl object-contain shadow-2xs border border-[#E0D0BE]"
+          />
           <div>
-            <h1 className="font-serif font-bold text-base tracking-wide text-[#3E271B]">SENDOKecil</h1>
-            <p className="text-[10px] text-[#7C6353] font-medium leading-tight">EST 2026 · Kue Gabin Fla Premium</p>
+            <h1 className="font-serif font-bold text-sm sm:text-base tracking-wide text-[#3E271B] leading-none">
+              SENDOKecil
+            </h1>
+            <p className="text-[10px] text-[#7C6353] font-medium leading-tight mt-0.5">
+              EST 2026 · Kue Gabin Fla
+            </p>
           </div>
         </div>
 
-        <button
-          onClick={onOpenOwnerLogin}
-          className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-[#EFE7DC] hover:bg-[#E5D8C7] text-[#5A3E2C] border border-[#DCCBB8] transition"
-        >
-          Login Owner
-        </button>
+        <div className="flex items-center gap-1.5">
+          {onBackToLanding && (
+            <button
+              type="button"
+              onClick={onBackToLanding}
+              className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] border border-[#DCCBB8] transition hidden sm:inline-flex"
+            >
+              Beranda
+            </button>
+          )}
+          <button
+            onClick={onOpenOwnerLogin}
+            className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-[#EFE7DC] hover:bg-[#E5D8C7] text-[#5A3E2C] border border-[#DCCBB8] transition"
+          >
+            Login Owner
+          </button>
+        </div>
       </header>
 
       {/* Hero Banner with Logo & Gabin Focus */}

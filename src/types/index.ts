@@ -92,4 +92,10 @@ export interface StoreConfig {
   bcaAccount: string;
   bcaHolder: string;
   qrisName: string;
+  instagram?: string;
+  instagramUrl?: string;
+  whatsappUrl?: string;
+  location?: string;
+  openingHours?: string;
+  taglineQuote?: string;
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { LandingPageView } from '@/components/LandingPageView';
 import { CustomerOrderView } from '@/components/CustomerOrderView';
 import { AdminDashboardView } from '@/components/AdminDashboardView';
 import { LoginModal } from '@/components/LoginModal';
@@ -9,7 +10,8 @@ import { INITIAL_HPP_COMPONENTS, INITIAL_PRODUCTS } from '@/lib/constants';
 import { SEED_ORDERS } from '@/data/seedOrders';
 
 export default function HomePage() {
-  const [view, setView] = useState<'customer' | 'admin'>('customer');
+  const [view, setView] = useState<'landing' | 'customer' | 'admin'>('landing');
+  const [preselectedProductId, setPreselectedProductId] = useState<string | undefined>(undefined);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
@@ -85,7 +87,7 @@ export default function HomePage() {
       console.error(e);
     }
     setIsAuthenticated(false);
-    setView('customer');
+    setView('landing');
   };
 
   // Order Actions
@@ -202,9 +204,20 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
-      {view === 'customer' ? (
+      {view === 'landing' ? (
+        <LandingPageView
+          products={products}
+          onGoToOrder={(productId) => {
+            setPreselectedProductId(productId);
+            setView('customer');
+          }}
+          onOpenOwnerLogin={handleOpenOwner}
+        />
+      ) : view === 'customer' ? (
         <CustomerOrderView
           products={products}
+          preselectedProductId={preselectedProductId}
+          onBackToLanding={() => setView('landing')}
           onOrderPlaced={(newOrder) => {
             setOrders((prev) => [newOrder, ...prev]);
           }}
@@ -226,6 +239,7 @@ export default function HomePage() {
           onDeleteHppComponent={handleDeleteHppComponent}
           onLogout={handleLogout}
           onSwitchToCustomer={() => setView('customer')}
+          onSwitchToLanding={() => setView('landing')}
         />
       )}
 

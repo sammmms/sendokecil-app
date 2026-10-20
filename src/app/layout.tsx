@@ -6,8 +6,14 @@ export const metadata: Metadata = {
   title: 'SENDOKecil EST 2026 · Dessert & Sweet Moments',
   description: 'Pesan dessert lumer istimewa Sendokecil langsung dari HP. Bayar mudah via QRIS / Transfer BCA.',
   icons: {
-    icon: '/logo-square.png',
-    apple: '/logo-square.png',
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
   },
 };
 
