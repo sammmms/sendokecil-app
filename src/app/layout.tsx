@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { AlertProvider } from '@/components/ui/CustomAlert';
 
 export const metadata: Metadata = {
   title: 'SENDOKecil EST 2026 · Dessert & Sweet Moments',
@@ -33,7 +34,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased min-h-screen selection:bg-[#E8DFC8] selection:text-[#4A2E1B]">
-        {children}
+        <AlertProvider>{children}</AlertProvider>
       </body>
     </html>
   );

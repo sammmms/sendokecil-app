@@ -76,14 +76,14 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
               Username Admin
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-[#8C6D58] absolute left-3 top-3.5" />
+              <User className="w-4 h-4 text-[#8C6D58] absolute left-3 top-3.5 z-20 pointer-events-none" />
               <input
                 type="text"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Masukkan username"
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-sm focus:outline-none focus:ring-2 focus:ring-[#8C5326] transition"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-sm focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
           </div>
@@ -93,14 +93,14 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
               Password Admin
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#8C6D58] absolute left-3 top-3.5" />
+              <Lock className="w-4 h-4 text-[#8C6D58] absolute left-3 top-3.5 z-20 pointer-events-none" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Masukkan password"
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-sm focus:outline-none focus:ring-2 focus:ring-[#8C5326] transition"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-sm focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
           </div>

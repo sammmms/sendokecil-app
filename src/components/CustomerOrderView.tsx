@@ -28,6 +28,7 @@ import { Order, OrderItem, OrderType, Product } from '@/types';
 import { OFFICIAL_QRIS_IMAGE, POPULAR_LOCATIONS, STORE_CONFIG } from '@/lib/constants';
 import { formatRupiah } from '@/lib/hpp';
 import { printOrderReceipt } from '@/lib/thermalPrint';
+import { useAlert } from '@/components/ui/CustomAlert';
 
 interface CustomerOrderViewProps {
   products: Product[];
@@ -36,6 +37,7 @@ interface CustomerOrderViewProps {
 }
 
 export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }: CustomerOrderViewProps) {
+  const { showAlert, showToast } = useAlert();
   // Form states
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -120,7 +122,11 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
   const handlePasteFromClipboard = async () => {
     try {
       if (!navigator.clipboard?.read) {
-        alert('Gunakan pintasan Ctrl+V / Cmd+V atau pilih dari galeri.');
+        await showAlert({
+          title: 'Petunjuk Unggah Bukti Bayar',
+          message: 'Gunakan tombol "Pilih dari Galeri" atau tekan pintasan Ctrl+V / Cmd+V langsung di keyboard Anda.',
+          type: 'info',
+        });
         return;
       }
       const clipboardItems = await navigator.clipboard.read();
@@ -129,12 +135,21 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
         if (imageType) {
           const blob = await item.getType(imageType);
           handleImageBlob(blob);
+          showToast('Bukti transfer dari clipboard berhasil dimuat!', 'success');
           return;
         }
       }
-      alert('Tidak ditemukan gambar di clipboard. Silakan copy screenshot bukti bayar terlebih dahulu.');
+      await showAlert({
+        title: 'Clipboard Kosong',
+        message: 'Tidak ditemukan gambar di clipboard Anda. Silakan salin (copy) screenshot bukti transfer terlebih dahulu atau pilih langsung dari galeri.',
+        type: 'warning',
+      });
     } catch {
-      alert('Gunakan tombol "Pilih dari Galeri" atau tekan Ctrl+V / Cmd+V.');
+      await showAlert({
+        title: 'Petunjuk Unggah Bukti Bayar',
+        message: 'Akses clipboard otomatis dibatasi oleh browser. Silakan gunakan tombol "Pilih dari Galeri" atau tekan tombol Ctrl+V / Cmd+V pada keyboard Anda.',
+        type: 'info',
+      });
     }
   };
 
@@ -531,21 +546,21 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Masukkan nama Anda (contoh: Megawati, Ellyn)"
-              className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-1 focus:ring-[#8C5326]"
+              className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
             />
           </div>
 
           <div>
             <label className="block font-semibold text-[#5A3E2C] mb-1">No. WhatsApp Aktif *</label>
             <div className="relative">
-              <Phone className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5" />
+              <Phone className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5 z-20 pointer-events-none" />
               <input
                 type="tel"
                 required
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
                 placeholder="0812 3456 7890"
-                className="w-full pl-8 pr-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-1 focus:ring-[#8C5326]"
+                className="w-full pl-8 pr-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
           </div>
@@ -560,7 +575,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                   value={deliveryAddress}
                   onChange={(e) => setDeliveryAddress(e.target.value)}
                   placeholder="Contoh: ASMEG, STMB, Jl. Zein Hamid No. 25..."
-                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-1 focus:ring-[#8C5326]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                 />
               </div>
 
@@ -592,7 +607,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                   value={deliveryTimeNote}
                   onChange={(e) => setDeliveryTimeNote(e.target.value)}
                   placeholder="Contoh: Jam 4 Sore, Titip Kibo, Titip ke Satpam"
-                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-1 focus:ring-[#8C5326]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] text-xs focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                 />
               </div>
             </div>
@@ -693,7 +708,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                     value={cardTo}
                     onChange={(e) => setCardTo(e.target.value)}
                     placeholder="Nama penerima"
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                   />
                 </div>
                 <div>
@@ -703,7 +718,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                     value={cardFrom}
                     onChange={(e) => setCardFrom(e.target.value)}
                     placeholder="Nama Anda"
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                   />
                 </div>
               </div>
@@ -713,7 +728,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                   rows={2}
                   value={cardMessage}
                   onChange={(e) => setCardMessage(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                  className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all resize-none"
                 />
               </div>
             </div>

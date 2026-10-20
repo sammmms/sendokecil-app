@@ -159,6 +159,17 @@ export function saveProduct(product: Product): Product {
   return product;
 }
 
+export function deleteProduct(id: string): boolean {
+  const db = ensureDb();
+  const beforeLen = db.products.length;
+  db.products = db.products.filter((p) => p.id !== id);
+  if (db.products.length !== beforeLen) {
+    persistDb(db);
+    return true;
+  }
+  return false;
+}
+
 // ---------------- HPP COMPONENTS ---------------- //
 
 export function getHppComponents(): HPPComponent[] {

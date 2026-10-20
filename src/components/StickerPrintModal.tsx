@@ -121,7 +121,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
                 type="text"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
             <div>
@@ -130,7 +130,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
                 type="text"
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
             <div>
@@ -139,7 +139,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
                 type="text"
                 value={sender}
                 onChange={(e) => setSender(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
             <div className="md:col-span-3">
@@ -148,7 +148,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
                 rows={2}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all resize-none"
               />
             </div>
           </div>

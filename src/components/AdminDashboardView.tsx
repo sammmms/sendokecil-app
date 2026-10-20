@@ -36,6 +36,7 @@ import { NewOrderModal } from './NewOrderModal';
 import { DeliveryRoutesView } from './DeliveryRoutesView';
 import { ProductManagerModal } from './ProductManagerModal';
 import { SupabaseSetupModal } from './SupabaseSetupModal';
+import { useAlert } from '@/components/ui/CustomAlert';
 
 interface AdminDashboardViewProps {
   orders: Order[];
@@ -47,6 +48,7 @@ interface AdminDashboardViewProps {
   onDeleteOrder: (orderId: string) => Promise<void>;
   onCreateOrder: (orderData: any) => Promise<void>;
   onSaveProduct: (product: Product) => Promise<void>;
+  onDeleteProduct?: (id: string) => Promise<void>;
   onUpdateHppComponent: (comp: HPPComponent) => Promise<void>;
   onDeleteHppComponent: (id: string) => Promise<void>;
   onLogout: () => void;
@@ -63,11 +65,13 @@ export function AdminDashboardView({
   onDeleteOrder,
   onCreateOrder,
   onSaveProduct,
+  onDeleteProduct,
   onUpdateHppComponent,
   onDeleteHppComponent,
   onLogout,
   onSwitchToCustomer,
 }: AdminDashboardViewProps) {
+  const { showConfirm, showToast } = useAlert();
   const [activeTab, setActiveTab] = useState<'orders' | 'routes' | 'analytics'>('orders');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -550,13 +554,21 @@ export function AdminDashboardView({
                               </button>
 
                               <button
-                                onClick={() => {
-                                  if (confirm(`Hapus pesanan #${order.orderNumber} (${order.customerName})?`)) {
-                                    onDeleteOrder(order.id);
+                                onClick={async () => {
+                                  const confirmed = await showConfirm({
+                                    title: 'Hapus Pesanan',
+                                    message: `Yakin ingin menghapus pesanan #${order.orderNumber} atas nama ${order.customerName}?`,
+                                    type: 'danger',
+                                    confirmText: 'Ya, Hapus Pesanan',
+                                    cancelText: 'Batal',
+                                  });
+                                  if (confirmed) {
+                                    await onDeleteOrder(order.id);
+                                    showToast(`Pesanan #${order.orderNumber} berhasil dihapus`, 'info');
                                   }
                                 }}
                                 title="Hapus Pesanan"
-                                className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition"
+                                className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -619,6 +631,7 @@ export function AdminDashboardView({
         onClose={() => setShowProductModal(false)}
         products={products}
         onSaveProduct={onSaveProduct}
+        onDeleteProduct={onDeleteProduct}
         onReload={onRefresh}
       />
 

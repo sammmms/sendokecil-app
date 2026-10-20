@@ -171,13 +171,13 @@ export function DeliveryRoutesView({
       <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-[#E8DFC8]">
         <div className="flex items-center gap-2 w-full md:w-auto flex-1">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5 z-20 pointer-events-none" />
             <input
               type="text"
               placeholder="Cari nama lokasi (ASMEG, STMB, dll), nama customer, atau no WA..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] text-xs text-[#3E271B] focus:outline-none focus:ring-1 focus:ring-[#8C5326]"
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] text-xs text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
             />
           </div>
 

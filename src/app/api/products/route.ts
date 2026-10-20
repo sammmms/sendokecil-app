@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getHppComponents, getProducts, saveProduct } from '@/lib/serverStorage';
+import { deleteProduct, getHppComponents, getProducts, saveProduct } from '@/lib/serverStorage';
 import { calculateProductHpp } from '@/lib/hpp';
-import { fetchSupabaseProducts, isSupabaseConfigured, upsertSupabaseProduct } from '@/lib/supabaseStorage';
+import { deleteSupabaseProduct, fetchSupabaseProducts, isSupabaseConfigured, upsertSupabaseProduct } from '@/lib/supabaseStorage';
 
 export async function GET() {
   try {
@@ -47,6 +47,26 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true, data: saved });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'ID produk tidak ditentukan' }, { status: 400 });
+    }
+
+    deleteProduct(id);
+
+    if (isSupabaseConfigured()) {
+      await deleteSupabaseProduct(id);
+    }
+
+    return NextResponse.json({ success: true, message: 'Produk berhasil dihapus' });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }

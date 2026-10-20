@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { X, Plus, Trash2, Edit3, DollarSign, PieChart, Layers, Check, Calculator, Sparkles } from 'lucide-react';
 import { HPPComponent, Product } from '@/types';
 import { calculateProductHpp, formatRupiah } from '@/lib/hpp';
+import { CurrencyInput } from '@/components/ui/CurrencyInput';
+import { useAlert } from '@/components/ui/CustomAlert';
 
 interface HppManagerModalProps {
   isOpen: boolean;
@@ -24,6 +26,7 @@ export function HppManagerModal({
   onDeleteComponent,
   onReload,
 }: HppManagerModalProps) {
+  const { showConfirm, showToast } = useAlert();
   const [activeTab, setActiveTab] = useState<'components' | 'recipes'>('components');
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -157,7 +160,7 @@ export function HppManagerModal({
                     placeholder="Contoh: Biskuit Oreo, Cup 200ml"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                   />
                 </div>
                 <div>
@@ -165,7 +168,7 @@ export function HppManagerModal({
                   <select
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value as any)}
-                    className="w-full px-2 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                    className="w-full px-2 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                   >
                     <option value="bahan_baku">Bahan Baku</option>
                     <option value="kemasan">Kemasan / Sendok</option>
@@ -175,21 +178,20 @@ export function HppManagerModal({
                 </div>
                 <div>
                   <label className="block text-[11px] font-semibold text-[#5A3E2C] mb-1">Biaya (Rp)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="50"
-                    required
+                  <CurrencyInput
                     value={newCost}
-                    onChange={(e) => setNewCost(Number(e.target.value))}
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B]"
+                    onChange={setNewCost}
+                    prefix="Rp"
+                    placeholder="1.000"
+                    className="px-2.5 py-1.5 rounded-lg"
+                    required
                   />
                 </div>
                 <div className="flex items-end">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-1.5 px-3 bg-[#6B4226] hover:bg-[#54331C] text-white font-semibold rounded-lg text-xs flex items-center justify-center gap-1 transition"
+                    className="w-full py-2 px-3 bg-[#6B4226] hover:bg-[#54331C] text-white font-semibold rounded-lg text-xs flex items-center justify-center gap-1 transition"
                   >
                     <Plus className="w-3.5 h-3.5" /> Tambah
                   </button>
@@ -233,15 +235,12 @@ export function HppManagerModal({
                         </td>
                         <td className="py-2.5 px-3 text-right font-semibold text-[#3E271B]">
                           {editingId === comp.id ? (
-                            <input
-                              type="number"
-                              defaultValue={comp.cost}
-                              onBlur={(e) => handleQuickCostEdit(comp, Number(e.target.value))}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleQuickCostEdit(comp, Number((e.target as any).value));
-                              }}
+                            <CurrencyInput
+                              value={comp.cost}
+                              onChange={(newVal) => handleQuickCostEdit(comp, newVal)}
+                              prefix="Rp"
                               autoFocus
-                              className="w-24 text-right px-1.5 py-0.5 border border-[#8C5326] rounded bg-white"
+                              className="w-28 text-right px-2 py-0.5 text-xs rounded-lg"
                             />
                           ) : (
                             <span
@@ -254,8 +253,21 @@ export function HppManagerModal({
                         </td>
                         <td className="py-2.5 px-3 text-center">
                           <button
-                            onClick={() => onDeleteComponent(comp.id)}
-                            className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
+                            type="button"
+                            onClick={async () => {
+                              const confirmed = await showConfirm({
+                                title: 'Hapus Komponen HPP',
+                                message: `Yakin ingin menghapus komponen "${comp.name}"? Ini akan mempengaruhi perhitungan margin produk yang menggunakan resep ini.`,
+                                type: 'danger',
+                                confirmText: 'Ya, Hapus',
+                                cancelText: 'Batal',
+                              });
+                              if (confirmed) {
+                                await onDeleteComponent(comp.id);
+                                showToast(`Komponen "${comp.name}" berhasil dihapus`, 'info');
+                              }
+                            }}
+                            className="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition"
                             title="Hapus komponen"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

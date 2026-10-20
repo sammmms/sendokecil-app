@@ -167,6 +167,18 @@ export default function HomePage() {
     }
   };
 
+  const handleDeleteProduct = async (id: string) => {
+    const res = await fetch(`/api/products?id=${id}`, {
+      method: 'DELETE',
+    });
+    const data = await res.json();
+    if (data.success) {
+      await fetchData();
+    } else {
+      throw new Error(data.message || 'Gagal menghapus produk');
+    }
+  };
+
   // HPP Actions
   const handleUpdateHppComponent = async (comp: HPPComponent) => {
     const res = await fetch('/api/hpp', {
@@ -209,6 +221,7 @@ export default function HomePage() {
           onDeleteOrder={handleDeleteOrder}
           onCreateOrder={handleCreateOrder}
           onSaveProduct={handleSaveProduct}
+          onDeleteProduct={handleDeleteProduct}
           onUpdateHppComponent={handleUpdateHppComponent}
           onDeleteHppComponent={handleDeleteHppComponent}
           onLogout={handleLogout}

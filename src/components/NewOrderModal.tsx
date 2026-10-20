@@ -5,6 +5,7 @@ import { X, Plus, Trash2, ShoppingBag, Truck, Store, AlertCircle } from 'lucide-
 import { Order, OrderItem, OrderPriority, OrderType, PaymentMethod, PaymentStatus, Product } from '@/types';
 import { POPULAR_LOCATIONS } from '@/lib/constants';
 import { formatRupiah } from '@/lib/hpp';
+import { useAlert } from '@/components/ui/CustomAlert';
 
 interface NewOrderModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface NewOrderModalProps {
 }
 
 export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderModalProps) {
+  const { showToast } = useAlert();
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [orderType, setOrderType] = useState<OrderType>('antar');
@@ -135,7 +137,7 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
         )}
 
         {/* Scrollable form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-4 py-2 pr-1 text-xs">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-4 px-1.5 py-3 text-xs">
           {/* Customer info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
@@ -146,7 +148,7 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Contoh: Megawati, Ellyn"
-                className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
+                className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
             <div>
@@ -156,7 +158,7 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
                 placeholder="Contoh: 0821 6568 9508"
-                className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
+                className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
               />
             </div>
           </div>
@@ -199,7 +201,7 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
                   value={deliveryAddress}
                   onChange={(e) => setDeliveryAddress(e.target.value)}
                   placeholder="Contoh: ASMEG, STMB, Jl. Zein Hamid..."
-                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                 />
               </div>
 
@@ -225,7 +227,7 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
                   value={deliveryTimeNote}
                   onChange={(e) => setDeliveryTimeNote(e.target.value)}
                   placeholder="Contoh: Jam 4 Sore, Titip Kibo, Titip ke Satpam"
-                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
                 />
               </div>
             </div>

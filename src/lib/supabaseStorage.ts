@@ -171,6 +171,23 @@ export async function upsertSupabaseProduct(product: Product): Promise<boolean> 
   }
 }
 
+export async function deleteSupabaseProduct(id: string): Promise<boolean> {
+  const supabase = createClient();
+  if (!supabase) return false;
+
+  try {
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) {
+      console.warn('Supabase delete product error:', error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('Supabase delete product failed:', err);
+    return false;
+  }
+}
+
 // ---------------- SYNC ALL ---------------- //
 
 export async function syncLocalToSupabase(orders: Order[], products: Product[]): Promise<{ success: boolean; message: string }> {

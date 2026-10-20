@@ -31,6 +31,25 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Remove spin buttons from number inputs across all browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+/* Remove native browser blue focus outline and set smooth focus */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus-visible {
+  outline: none;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
@@ -52,3 +71,4 @@ body {
     background: transparent !important;
   }
 }
+
