@@ -152,6 +152,21 @@ export default function HomePage() {
     }
   };
 
+  // Product Actions
+  const handleSaveProduct = async (product: Product) => {
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product),
+    });
+    const data = await res.json();
+    if (data.success) {
+      await fetchData();
+    } else {
+      throw new Error(data.message || 'Gagal menyimpan produk');
+    }
+  };
+
   // HPP Actions
   const handleUpdateHppComponent = async (comp: HPPComponent) => {
     const res = await fetch('/api/hpp', {
@@ -161,7 +176,7 @@ export default function HomePage() {
     });
     const data = await res.json();
     if (data.success) {
-      await fetchData(); // Refresh everything to update order profits
+      await fetchData();
     }
   };
 
@@ -193,6 +208,7 @@ export default function HomePage() {
           onUpdateOrderStatus={handleUpdateOrderStatus}
           onDeleteOrder={handleDeleteOrder}
           onCreateOrder={handleCreateOrder}
+          onSaveProduct={handleSaveProduct}
           onUpdateHppComponent={handleUpdateHppComponent}
           onDeleteHppComponent={handleDeleteHppComponent}
           onLogout={handleLogout}

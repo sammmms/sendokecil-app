@@ -22,10 +22,10 @@ import {
   CheckCircle2,
   AlertCircle,
   ExternalLink,
+  Maximize2,
 } from 'lucide-react';
-import QRCode from 'qrcode';
-import { Order, OrderItem, OrderType, Product, StoreConfig } from '@/types';
-import { POPULAR_LOCATIONS, STORE_CONFIG } from '@/lib/constants';
+import { Order, OrderItem, OrderType, Product } from '@/types';
+import { OFFICIAL_QRIS_IMAGE, POPULAR_LOCATIONS, STORE_CONFIG } from '@/lib/constants';
 import { formatRupiah } from '@/lib/hpp';
 import { printOrderReceipt } from '@/lib/thermalPrint';
 
@@ -54,6 +54,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
   const [proofImage, setProofImage] = useState<string | null>(null);
   const [uploadingProof, setUploadingProof] = useState(false);
   const [copiedAccount, setCopiedAccount] = useState(false);
+  const [showQrisZoom, setShowQrisZoom] = useState(false);
 
   // Greeting card add-on
   const [showGreetingCard, setShowGreetingCard] = useState(false);
@@ -61,31 +62,12 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
   const [cardFrom, setCardFrom] = useState('');
   const [cardMessage, setCardMessage] = useState('Selamat menikmati sweet treat ini! ✨');
 
-  // QR Code data URL
-  const [qrisQrUrl, setQrisQrUrl] = useState<string>('');
-
   // Submitted order tracking state
   const [submittedOrder, setSubmittedOrder] = useState<Order | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Generate QRIS QR code
-  useEffect(() => {
-    // Generate valid scannable QR code string representation
-    const qrisData = `00020101021126600016ID.CO.BCA.WWW0118936000000000000000021579855662240303UME51440014ID.LINKAJA.WWW0118936000000000000000021579855662240303UME5204581453033605802ID5910SENDOKECIL6005MEDAN6304`;
-    QRCode.toDataURL(qrisData, {
-      width: 320,
-      margin: 1,
-      color: {
-        dark: '#3E271B',
-        light: '#FFFFFF',
-      },
-    })
-      .then((url) => setQrisQrUrl(url))
-      .catch((err) => console.error('Failed generating QR code:', err));
-  }, []);
 
   // Global clipboard paste listener for payment screenshot
   useEffect(() => {
@@ -138,7 +120,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
   const handlePasteFromClipboard = async () => {
     try {
       if (!navigator.clipboard?.read) {
-        alert('Browser Anda memerlukan izin clipboard. Anda juga bisa langsung tekan Ctrl+V / Cmd+V atau pilih dari galeri.');
+        alert('Gunakan pintasan Ctrl+V / Cmd+V atau pilih dari galeri.');
         return;
       }
       const clipboardItems = await navigator.clipboard.read();
@@ -150,8 +132,8 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
           return;
         }
       }
-      alert('Tidak ditemukan gambar di clipboard Anda. Silakan copy/screenshot bukti bayar terlebih dahulu.');
-    } catch (err) {
+      alert('Tidak ditemukan gambar di clipboard. Silakan copy screenshot bukti bayar terlebih dahulu.');
+    } catch {
       alert('Gunakan tombol "Pilih dari Galeri" atau tekan Ctrl+V / Cmd+V.');
     }
   };
@@ -218,7 +200,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
       return;
     }
     if (orderItems.length === 0) {
-      setErrorMessage('Keranjang Anda masih kosong. Pilih minimal 1 dessert.');
+      setErrorMessage('Keranjang Anda masih kosong. Pilih minimal 1 varian Gabin.');
       return;
     }
 
@@ -261,7 +243,6 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
         throw new Error(json.message || 'Gagal mengirim pesanan');
       }
 
-      // Celebratory confetti!
       confetti({
         particleCount: 120,
         spread: 70,
@@ -285,7 +266,6 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
     return (
       <div className="max-w-md mx-auto min-h-screen bg-[#FAF7F2] p-4 flex flex-col justify-between">
         <div className="space-y-4">
-          {/* Logo & Confirmation Card */}
           <div className="text-center pt-4 pb-2">
             <img
               src="/logo-banner.png"
@@ -301,7 +281,6 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
             </p>
           </div>
 
-          {/* Tracking Card */}
           <div className="bg-white rounded-2xl p-5 border border-[#E8DFC8] shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#F0E6D8]">
               <div>
@@ -377,9 +356,9 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                     3
                   </div>
                   <div className="text-xs">
-                    <div className="font-bold text-[#3E271B]">Persiapan & Pengemasan</div>
+                    <div className="font-bold text-[#3E271B]">Persiapan & Pengemasan Gabin</div>
                     <div className="text-[11px] text-gray-500">
-                      {submittedOrder.orderType === 'antar' ? 'Dessert dipersiapkan & dipacking untuk kurir' : 'Dessert disiapkan untuk pengambilan'}
+                      {submittedOrder.orderType === 'antar' ? 'Kue Gabin dipacking rapi untuk kurir' : 'Kue Gabin disiapkan untuk pengambilan'}
                     </div>
                   </div>
                 </div>
@@ -405,7 +384,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
 
             {/* Order Items summary */}
             <div className="p-3 bg-[#FAF5EC] rounded-xl border border-[#E8DFD3] text-xs space-y-1.5">
-              <div className="font-bold text-[#5A3E2C] mb-1">Rincian Item:</div>
+              <div className="font-bold text-[#5A3E2C] mb-1">Rincian Varian Gabin:</div>
               {submittedOrder.items.map((it, idx) => (
                 <div key={idx} className="flex justify-between">
                   <span>{it.quantity}x {it.productName}</span>
@@ -418,7 +397,6 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
               </div>
             </div>
 
-            {/* Delivery address info */}
             {submittedOrder.orderType === 'antar' && (
               <div className="text-xs p-3 bg-amber-50/60 rounded-xl border border-amber-200/60 space-y-1">
                 <div className="font-bold text-[#5A3E2C] flex items-center gap-1.5">
@@ -435,7 +413,6 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
           </div>
         </div>
 
-        {/* Action buttons */}
         <div className="space-y-2 pt-4">
           <button
             onClick={() => printOrderReceipt(submittedOrder)}
@@ -480,7 +457,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
           <img src="/icon.png" alt="SENDOKecil" className="w-9 h-9 rounded-full object-cover shadow-sm border border-[#E0D0BE]" />
           <div>
             <h1 className="font-serif font-bold text-base tracking-wide text-[#3E271B]">SENDOKecil</h1>
-            <p className="text-[10px] text-[#7C6353] font-medium leading-tight">EST 2026 · Dessert & Sweet Moments</p>
+            <p className="text-[10px] text-[#7C6353] font-medium leading-tight">EST 2026 · Kue Gabin Fla Premium</p>
           </div>
         </div>
 
@@ -492,13 +469,16 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
         </button>
       </header>
 
-      {/* Hero Banner with Logo */}
+      {/* Hero Banner with Logo & Gabin Focus */}
       <div className="px-4 pt-4 pb-2 text-center">
         <div className="relative rounded-2xl bg-[#FFFDF9] border border-[#EAE0D2] p-4 shadow-sm overflow-hidden">
           <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#F3ECE0] rounded-full opacity-60" />
-          <img src="/logo-banner.png" alt="SENDOKecil EST 2026" className="h-14 mx-auto object-contain mb-1" />
+          <img src="/logo-banner.png" alt="SENDOKecil EST 2026" className="h-12 mx-auto object-contain mb-1" />
+          <div className="inline-block px-3 py-1 bg-[#F5ECE0] rounded-full text-[11px] font-bold text-[#6B4226] border border-[#E0D0BE] mb-1">
+            Menu Utama: Kue Gabin Fla Aneka Varian 🧇
+          </div>
           <p className="text-xs text-[#7A5B45] font-serif italic">
-            "Pesan mudah, bayar cepat, nikmati dessert lumer istimewa"
+            "Biskuit gabin renyah dengan isian fla lumer aneka rasa pilihan"
           </p>
         </div>
       </div>
@@ -623,11 +603,16 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
           )}
         </div>
 
-        {/* Menu Catalog Section */}
+        {/* Gabin Variants Catalog */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
-            <h3 className="font-serif font-bold text-base text-[#3E271B]">Pilih Menu Dessert</h3>
-            <span className="text-[11px] text-[#7C6353]">{products.length} Varian Tersedia</span>
+            <div>
+              <h3 className="font-serif font-bold text-base text-[#3E271B]">Pilih Varian Rasa Gabin</h3>
+              <p className="text-[11px] text-[#7C6353]">Harga: Rp 15.000 / pcs</p>
+            </div>
+            <span className="text-[11px] font-semibold text-[#8C5326] bg-[#F5ECE0] px-2.5 py-0.5 rounded-full border border-[#E2D2BE]">
+              {products.length} Varian
+            </span>
           </div>
 
           <div className="space-y-2.5">
@@ -636,37 +621,44 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
               return (
                 <div
                   key={product.id}
-                  className={`p-3.5 rounded-2xl border transition bg-[#FFFDF9] shadow-sm flex items-center justify-between gap-3 ${
+                  className={`p-3 rounded-2xl border transition bg-[#FFFDF9] shadow-sm flex items-center justify-between gap-3 ${
                     qty > 0 ? 'border-[#8C5326] ring-1 ring-[#8C5326]/30' : 'border-[#E8DFC8]'
                   }`}
                 >
+                  {/* Photo thumbnail */}
+                  <img
+                    src={product.image || '/images/products/choco-oreo.jpg'}
+                    alt={product.name}
+                    className="w-16 h-16 rounded-xl object-cover border border-[#E8DFC8] shrink-0"
+                  />
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <h4 className="font-bold text-sm text-[#3E271B]">{product.name}</h4>
+                      <h4 className="font-bold text-xs text-[#3E271B] truncate">{product.name}</h4>
                       {product.badge && (
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FAF2E6] text-[#7A4B27] border border-[#E2D2BE]">
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#FAF2E6] text-[#7A4B27] border border-[#E2D2BE]">
                           {product.badge}
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#7C6353] line-clamp-1 mt-0.5">{product.tagline}</p>
-                    <div className="font-bold text-sm text-[#6B4226] mt-1">{formatRupiah(product.price)}</div>
+                    <p className="text-[10px] text-[#7C6353] line-clamp-1 mt-0.5">{product.tagline}</p>
+                    <div className="font-bold text-xs text-[#6B4226] mt-1">{formatRupiah(product.price)}</div>
                   </div>
 
                   {/* Quantity Stepper */}
-                  <div className="flex items-center gap-2 shrink-0 bg-[#F5ECE0] p-1 rounded-xl border border-[#E0D0BE]">
+                  <div className="flex items-center gap-1.5 shrink-0 bg-[#F5ECE0] p-1 rounded-xl border border-[#E0D0BE]">
                     <button
                       type="button"
                       onClick={() => handleQtyChange(product.id, -1)}
-                      className="w-7 h-7 rounded-lg bg-white text-[#5A3E2C] font-bold text-sm flex items-center justify-center hover:bg-[#EFE5D5] transition shadow-xs"
+                      className="w-7 h-7 rounded-lg bg-white text-[#5A3E2C] font-bold text-xs flex items-center justify-center hover:bg-[#EFE5D5] transition shadow-xs"
                     >
                       -
                     </button>
-                    <span className="w-5 text-center font-bold text-sm text-[#3E271B]">{qty}</span>
+                    <span className="w-5 text-center font-bold text-xs text-[#3E271B]">{qty}</span>
                     <button
                       type="button"
                       onClick={() => handleQtyChange(product.id, 1)}
-                      className="w-7 h-7 rounded-lg bg-[#6B4226] text-white font-bold text-sm flex items-center justify-center hover:bg-[#54331C] transition shadow-xs"
+                      className="w-7 h-7 rounded-lg bg-[#6B4226] text-white font-bold text-xs flex items-center justify-center hover:bg-[#54331C] transition shadow-xs"
                     >
                       +
                     </button>
@@ -728,19 +720,44 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
           )}
         </div>
 
-        {/* Payment & QR Section */}
+        {/* Official QRIS & Payment Section */}
         <div className="bg-[#FFFDF9] rounded-2xl p-4 border border-[#E8DFC8] shadow-sm space-y-3 text-xs">
           <div className="font-bold text-sm text-[#3E271B] flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <QrCode className="w-4 h-4 text-[#8C5326]" /> Pembayaran Transfer / QRIS
+              <QrCode className="w-4 h-4 text-[#8C5326]" /> Pembayaran QRIS & Transfer
             </span>
             <span className="text-base font-bold text-[#6B4226]">{formatRupiah(totalAmount)}</span>
+          </div>
+
+          {/* Official QRIS Standee Banner */}
+          <div className="p-3 bg-white rounded-xl border border-[#E8DFC8] text-center space-y-2">
+            <div className="text-[11px] font-bold text-[#3E271B]">
+              Scan QRIS Resmi SENDOKECIL - FOOD:
+            </div>
+            <div className="relative inline-block group">
+              <img
+                src={OFFICIAL_QRIS_IMAGE}
+                alt="QRIS SENDOKECIL"
+                className="w-52 mx-auto rounded-lg shadow-md border border-[#EAE0D2] object-contain cursor-pointer"
+                onClick={() => setShowQrisZoom(true)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowQrisZoom(true)}
+                className="absolute bottom-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 text-white rounded-lg backdrop-blur-xs flex items-center gap-1 text-[10px]"
+              >
+                <Maximize2 className="w-3 h-3" /> Perbesar
+              </button>
+            </div>
+            <div className="text-[10px] text-gray-500">
+              NMID: <b>ID1026619039856</b> · A01 · BCA / GoPay / OVO / Dana / ShopeePay / Livin
+            </div>
           </div>
 
           {/* BCA Transfer Box */}
           <div className="p-3 bg-[#FAF5EC] rounded-xl border border-[#E8DFD3] flex items-center justify-between">
             <div>
-              <div className="text-[10px] text-[#7A5B45] font-semibold">Transfer Bank BCA</div>
+              <div className="text-[10px] text-[#7A5B45] font-semibold">Atau Transfer Manual BCA</div>
               <div className="text-sm font-bold font-mono text-[#3E271B] tracking-wider mt-0.5">
                 {STORE_CONFIG.bcaAccount}
               </div>
@@ -752,24 +769,9 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
               className="py-1.5 px-3 bg-white border border-[#DCCBB8] rounded-lg font-semibold text-xs text-[#5A3E2C] hover:bg-[#F3ECE0] flex items-center gap-1 shadow-xs transition"
             >
               {copiedAccount ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
-              {copiedAccount ? 'Tersalin' : 'Salin Rekening'}
+              {copiedAccount ? 'Tersalin' : 'Salin No. Rek'}
             </button>
           </div>
-
-          {/* QRIS Code */}
-          {qrisQrUrl && (
-            <div className="text-center p-3 bg-white rounded-xl border border-[#E8DFC8]">
-              <div className="text-[11px] font-semibold text-[#5A3E2C] mb-1.5">
-                Atau Scan QRIS (Semua E-Wallet & Mobile Banking):
-              </div>
-              <img
-                src={qrisQrUrl}
-                alt="QRIS SENDOKECIL"
-                className="w-44 h-44 mx-auto rounded-lg shadow-sm border border-[#EFE7DC]"
-              />
-              <div className="text-[10px] text-gray-500 mt-1">BCA · GoPay · OVO · ShopeePay · Dana · Livin</div>
-            </div>
-          )}
 
           {/* Proof of Payment Upload / Paste */}
           <div className="pt-2 border-t border-[#F2ECE4] space-y-2">
@@ -778,7 +780,6 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
               <span className="text-[10px] text-gray-500">Bisa paste / galeri</span>
             </div>
 
-            {/* Hidden file input */}
             <input
               type="file"
               ref={fileInputRef}
@@ -798,7 +799,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
                   <div className="text-xs font-bold text-emerald-800 flex items-center gap-1">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Bukti Terpasang
                   </div>
-                  <div className="text-[10px] text-gray-500 mt-0.5">Siap diverifikasi oleh owner toko</div>
+                  <div className="text-[10px] text-gray-500 mt-0.5">Siap diverifikasi oleh admin toko</div>
                 </div>
                 <button
                   type="button"
@@ -828,7 +829,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
               </div>
             )}
             <div className="text-[10px] text-gray-400 italic">
-              Tip: Setelah screenshot di m-Banking, cukup tekan tombol <b>Paste Clipboard</b> atau Ctrl+V.
+              Tip: Setelah screenshot di m-Banking, tekan tombol <b>Paste Clipboard</b> atau Ctrl+V.
             </div>
           </div>
         </div>
@@ -837,7 +838,7 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-t border-[#E8DEC8] p-3">
           <div className="max-w-md mx-auto flex items-center justify-between gap-3">
             <div>
-              <div className="text-[10px] text-[#7A5B45]">Total ({totalPcs} pcs):</div>
+              <div className="text-[10px] text-[#7A5B45]">Total ({totalPcs} pcs Gabin):</div>
               <div className="text-base font-bold text-[#3E271B] leading-tight">{formatRupiah(totalAmount)}</div>
             </div>
 
@@ -852,6 +853,27 @@ export function CustomerOrderView({ products, onOrderPlaced, onOpenOwnerLogin }:
           </div>
         </div>
       </form>
+
+      {/* QRIS Full Zoom Modal */}
+      {showQrisZoom && (
+        <div
+          onClick={() => setShowQrisZoom(false)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
+          <div className="relative max-w-sm w-full bg-white rounded-2xl p-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-bold text-xs text-[#3E271B]">QRIS Resmi SENDOKECIL - FOOD</span>
+              <button onClick={() => setShowQrisZoom(false)} className="p-1 text-gray-500 rounded-full hover:bg-gray-100">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <img src={OFFICIAL_QRIS_IMAGE} alt="QRIS Standee" className="w-full rounded-lg object-contain shadow" />
+            <div className="text-center text-[10px] text-gray-500 mt-2">
+              Tunjukkan atau scan langsung menggunakan kamera m-Banking / e-Wallet
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

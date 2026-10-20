@@ -22,15 +22,20 @@ import {
   LogOut,
   RefreshCw,
   ShoppingBag,
+  Database,
+  Layers,
 } from 'lucide-react';
 import { HPPComponent, Order, Product } from '@/types';
 import { formatNumber, formatRupiah } from '@/lib/hpp';
+import { isSupabaseConfigured } from '@/lib/supabaseStorage';
 import { ProofPreviewModal } from './ProofPreviewModal';
 import { ThermalReceiptModal } from './ThermalReceiptModal';
 import { StickerPrintModal } from './StickerPrintModal';
 import { HppManagerModal } from './HppManagerModal';
 import { NewOrderModal } from './NewOrderModal';
 import { DeliveryRoutesView } from './DeliveryRoutesView';
+import { ProductManagerModal } from './ProductManagerModal';
+import { SupabaseSetupModal } from './SupabaseSetupModal';
 
 interface AdminDashboardViewProps {
   orders: Order[];
@@ -41,6 +46,7 @@ interface AdminDashboardViewProps {
   onUpdateOrderStatus: (orderId: string, status: Order['fulfillmentStatus']) => Promise<void>;
   onDeleteOrder: (orderId: string) => Promise<void>;
   onCreateOrder: (orderData: any) => Promise<void>;
+  onSaveProduct: (product: Product) => Promise<void>;
   onUpdateHppComponent: (comp: HPPComponent) => Promise<void>;
   onDeleteHppComponent: (id: string) => Promise<void>;
   onLogout: () => void;
@@ -56,6 +62,7 @@ export function AdminDashboardView({
   onUpdateOrderStatus,
   onDeleteOrder,
   onCreateOrder,
+  onSaveProduct,
   onUpdateHppComponent,
   onDeleteHppComponent,
   onLogout,
@@ -72,6 +79,10 @@ export function AdminDashboardView({
   const [printStickerOrder, setPrintStickerOrder] = useState<Order | null>(null);
   const [showHppModal, setShowHppModal] = useState(false);
   const [showNewOrderModal, setShowNewOrderModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [showSupabaseModal, setShowSupabaseModal] = useState(false);
+
+  const supabaseConnected = isSupabaseConfigured();
 
   // Financial calculations
   const { totalOmset, totalHpp, netProfit, marginPct, totalPcs, variantBreakdown, pendingApprovalCount } =
@@ -172,6 +183,17 @@ export function AdminDashboardView({
             <span className="hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FAF2E6] text-[#6B4226] border border-[#E8DFC8]">
               Dashboard Owner
             </span>
+            <button
+              onClick={() => setShowSupabaseModal(true)}
+              className={`hidden md:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border transition ${
+                supabaseConnected
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  : 'bg-amber-50 text-amber-800 border-amber-300'
+              }`}
+            >
+              <Database className="w-3 h-3" />
+              {supabaseConnected ? 'Supabase Terhubung' : 'Supabase Setup'}
+            </button>
           </div>
 
           <div className="flex items-center gap-2">
@@ -179,7 +201,14 @@ export function AdminDashboardView({
               onClick={onSwitchToCustomer}
               className="py-1.5 px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
             >
-              <ShoppingBag className="w-3.5 h-3.5" /> Lihat Tampilan Customer
+              <ShoppingBag className="w-3.5 h-3.5" /> Lihat Menu Customer
+            </button>
+
+            <button
+              onClick={() => setShowProductModal(true)}
+              className="py-1.5 px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+            >
+              <Layers className="w-3.5 h-3.5" /> Kelola Produk
             </button>
 
             <button
@@ -251,7 +280,7 @@ export function AdminDashboardView({
           {/* Total Pcs Card */}
           <div className="bg-white p-4.5 rounded-2xl border border-[#E8DFC8] shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#7A5B45]">Total Dessert Terjual</span>
+              <span className="text-xs font-bold text-[#7A5B45]">Total Gabin Terjual</span>
               <div className="p-2 bg-[#FAF5EC] rounded-xl text-[#6B4226]">
                 <Package className="w-4 h-4" />
               </div>
@@ -295,7 +324,14 @@ export function AdminDashboardView({
             </div>
 
             {/* Quick Actions */}
-            <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+            <div className="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+              <button
+                onClick={() => setShowProductModal(true)}
+                className="py-2 px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+              >
+                <Layers className="w-3.5 h-3.5" /> Tambah / Edit Produk
+              </button>
+
               <button
                 onClick={() => setShowHppModal(true)}
                 className="py-2 px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
@@ -367,7 +403,7 @@ export function AdminDashboardView({
                       <th className="py-3 px-3">No. Order</th>
                       <th className="py-3 px-3">Pelanggan</th>
                       <th className="py-3 px-3">Layanan & Destinasi</th>
-                      <th className="py-3 px-3">Pesanan</th>
+                      <th className="py-3 px-3">Varian Gabin</th>
                       <th className="py-3 px-3 text-right">Total</th>
                       <th className="py-3 px-3 text-center">Bukti Bayar</th>
                       <th className="py-3 px-3 text-center">Status Bayar</th>
@@ -426,7 +462,7 @@ export function AdminDashboardView({
                             <div className="text-[11px] text-[#3E271B] font-medium truncate">
                               {order.items.map((it) => `${it.quantity}x ${it.productName}`).join(', ')}
                             </div>
-                            <div className="text-[10px] text-gray-400">{order.totalPcs} pcs</div>
+                            <div className="text-[10px] text-gray-400">{order.totalPcs} pcs Gabin</div>
                           </td>
 
                           {/* Total */}
@@ -576,6 +612,22 @@ export function AdminDashboardView({
         onUpdateComponent={onUpdateHppComponent}
         onDeleteComponent={onDeleteHppComponent}
         onReload={onRefresh}
+      />
+
+      <ProductManagerModal
+        isOpen={showProductModal}
+        onClose={() => setShowProductModal(false)}
+        products={products}
+        onSaveProduct={onSaveProduct}
+        onReload={onRefresh}
+      />
+
+      <SupabaseSetupModal
+        isOpen={showSupabaseModal}
+        onClose={() => setShowSupabaseModal(false)}
+        orders={orders}
+        products={products}
+        onRefresh={onRefresh}
       />
 
       <NewOrderModal
