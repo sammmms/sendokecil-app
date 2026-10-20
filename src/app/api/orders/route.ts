@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createOrder, getOrders } from '@/lib/serverStorage';
+import { fetchSupabaseOrders, isSupabaseConfigured, upsertSupabaseOrder } from '@/lib/supabaseStorage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,6 +11,14 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')?.toLowerCase();
 
     let orders = getOrders();
+
+    // If Supabase is configured, try pulling live cloud orders
+    if (isSupabaseConfigured()) {
+      const cloudOrders = await fetchSupabaseOrders();
+      if (cloudOrders && cloudOrders.length > 0) {
+        orders = cloudOrders;
+      }
+    }
 
     if (status && status !== 'all') {
       if (status === 'pending_approval') {
@@ -84,6 +93,11 @@ export async function POST(request: Request) {
       adminNotes: '',
       greetingCard: body.greetingCard,
     });
+
+    // Sync to Supabase in parallel if configured
+    if (isSupabaseConfigured()) {
+      upsertSupabaseOrder(newOrder).catch((e) => console.warn('Supabase background sync:', e));
+    }
 
     return NextResponse.json({ success: true, data: newOrder });
   } catch (err: any) {

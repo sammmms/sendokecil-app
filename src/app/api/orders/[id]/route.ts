@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteOrder, getOrderById, updateOrder } from '@/lib/serverStorage';
+import { isSupabaseConfigured, upsertSupabaseOrder } from '@/lib/supabaseStorage';
+import { createClient } from '@/utils/supabase/client';
 
 export async function GET(
   request: NextRequest,
@@ -26,6 +28,10 @@ export async function PATCH(
       return NextResponse.json({ success: false, message: 'Pesanan tidak ditemukan' }, { status: 404 });
     }
 
+    if (isSupabaseConfigured()) {
+      upsertSupabaseOrder(updated).catch((e) => console.warn('Supabase patch sync:', e));
+    }
+
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
@@ -42,6 +48,12 @@ export async function DELETE(
     if (!ok) {
       return NextResponse.json({ success: false, message: 'Pesanan tidak ditemukan' }, { status: 404 });
     }
+
+    if (isSupabaseConfigured()) {
+      const supabase = createClient();
+      supabase?.from('orders').delete().eq('id', id).then();
+    }
+
     return NextResponse.json({ success: true, message: 'Pesanan berhasil dihapus' });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });

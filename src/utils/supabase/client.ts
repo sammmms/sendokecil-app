@@ -1,15 +1,16 @@
-import { createBrowserClient } from '@supabase/ssr';
+import { createBrowserClient } from "@supabase/ssr";
 
-export const getSupabaseConfig = () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
-  return { url, key, isConfigured: Boolean(url && key) };
-};
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ceargvawthyncgpojgbd.supabase.co";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_qpz6tTUOwg8nBbqCwVvGXw_ydYJpBv6";
 
-export const createClient = () => {
-  const { url, key } = getSupabaseConfig();
-  if (!url || !key) {
-    return null;
-  }
-  return createBrowserClient(url, key);
-};
+export const getSupabaseConfig = () => ({
+  url: supabaseUrl,
+  key: supabaseKey,
+  isConfigured: Boolean(supabaseUrl && supabaseKey),
+});
+
+export const createClient = () =>
+  createBrowserClient(
+    supabaseUrl!,
+    supabaseKey!,
+  );

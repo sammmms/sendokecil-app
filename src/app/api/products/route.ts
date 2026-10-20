@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getHppComponents, getProducts, saveProduct } from '@/lib/serverStorage';
 import { calculateProductHpp } from '@/lib/hpp';
+import { fetchSupabaseProducts, isSupabaseConfigured, upsertSupabaseProduct } from '@/lib/supabaseStorage';
 
 export async function GET() {
   try {
-    const products = getProducts();
+    let products = getProducts();
     const components = getHppComponents();
+
+    if (isSupabaseConfigured()) {
+      const cloudProducts = await fetchSupabaseProducts();
+      if (cloudProducts && cloudProducts.length > 0) {
+        products = cloudProducts;
+      }
+    }
 
     // Enrich products with computed live HPP
     const enriched = products.map((p) => {
@@ -33,6 +41,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Data produk tidak lengkap' }, { status: 400 });
     }
     const saved = saveProduct(body);
+
+    if (isSupabaseConfigured()) {
+      upsertSupabaseProduct(saved).catch((e) => console.warn('Supabase product sync:', e));
+    }
+
     return NextResponse.json({ success: true, data: saved });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
