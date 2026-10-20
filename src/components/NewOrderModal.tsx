@@ -237,31 +237,38 @@ export function NewOrderModal({ isOpen, onClose, products, onSubmit }: NewOrderM
           {/* Product selection */}
           <div>
             <label className="block font-semibold text-[#5A3E2C] mb-2">Pilih Varian & Jumlah</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {products.map((p) => {
                 const qty = cart[p.id] || 0;
                 return (
                   <div
                     key={p.id}
-                    className="p-3 rounded-xl border border-[#E8DFC8] bg-white flex items-center justify-between"
+                    className="p-2.5 rounded-2xl border border-[#E8DFC8] bg-white flex items-center justify-between gap-3 shadow-2xs hover:border-[#D0BEA7] transition"
                   >
-                    <div>
-                      <div className="font-bold text-[#3E271B]">{p.name}</div>
-                      <div className="text-[11px] text-[#7C6353]">{formatRupiah(p.price)}</div>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <img
+                        src={p.image || '/images/products/choco-oreo.jpg'}
+                        alt={p.name}
+                        className="w-12 h-12 rounded-xl object-cover border border-[#E8DFC8] shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <div className="font-bold text-xs text-[#3E271B] truncate">{p.name}</div>
+                        <div className="text-[11px] font-semibold text-[#6B4226] mt-0.5">{formatRupiah(p.price)}</div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <button
                         type="button"
                         onClick={() => handleQtyChange(p.id, -1)}
-                        className="w-7 h-7 rounded-lg bg-[#F5ECE0] text-[#5A3E2C] font-bold flex items-center justify-center hover:bg-[#EAE0D2]"
+                        className="w-7 h-7 rounded-lg bg-[#F5ECE0] text-[#5A3E2C] font-bold text-sm flex items-center justify-center hover:bg-[#EAE0D2] transition active:scale-95"
                       >
                         -
                       </button>
-                      <span className="w-6 text-center font-bold text-sm text-[#3E271B]">{qty}</span>
+                      <span className="w-5 text-center font-bold text-xs text-[#3E271B]">{qty}</span>
                       <button
                         type="button"
                         onClick={() => handleQtyChange(p.id, 1)}
-                        className="w-7 h-7 rounded-lg bg-[#6B4226] text-white font-bold flex items-center justify-center hover:bg-[#54331C]"
+                        className="w-7 h-7 rounded-lg bg-[#6B4226] text-white font-bold text-sm flex items-center justify-center hover:bg-[#54331C] transition active:scale-95"
                       >
                         +
                       </button>

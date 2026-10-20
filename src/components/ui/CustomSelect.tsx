@@ -20,6 +20,8 @@ interface CustomSelectProps {
   className?: string;
   label?: string;
   disabled?: boolean;
+  showBadgeInTrigger?: boolean;
+  align?: 'left' | 'right';
 }
 
 export function CustomSelect({
@@ -30,6 +32,8 @@ export function CustomSelect({
   className = '',
   label,
   disabled = false,
+  showBadgeInTrigger = false,
+  align = 'left',
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -92,16 +96,16 @@ export function CustomSelect({
             : 'hover:border-[#C4B29E] hover:bg-[#FAF8F5]'
         } ${disabled ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'cursor-pointer'}`}
       >
-        <div className="flex items-center gap-2 truncate">
+        <div className="flex items-center gap-1.5 truncate">
           {selectedOption?.icon && (
             <span className="shrink-0 text-[#6B4226]">{selectedOption.icon}</span>
           )}
           <span className="truncate">
             {selectedOption ? selectedOption.label : placeholder}
           </span>
-          {selectedOption?.badge && (
+          {showBadgeInTrigger && selectedOption?.badge && (
             <span
-              className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 ${
                 selectedOption.badgeColor || 'bg-[#F3ECE0] text-[#6B4226]'
               }`}
             >
@@ -110,7 +114,7 @@ export function CustomSelect({
           )}
         </div>
         <ChevronDown
-          className={`w-4 h-4 text-[#8C6D53] shrink-0 transition-transform duration-200 ${
+          className={`w-3.5 h-3.5 text-[#8C6D53] shrink-0 transition-transform duration-200 ${
             isOpen ? 'rotate-180 text-[#6B4226]' : ''
           }`}
         />
@@ -120,7 +124,9 @@ export function CustomSelect({
       {isOpen && (
         <div
           role="listbox"
-          className="absolute z-50 left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-xl border border-[#E8DEC8] bg-[#FFFDF9] p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-150 text-xs"
+          className={`absolute z-50 mt-1 min-w-[150px] max-h-60 overflow-y-auto rounded-xl border border-[#E8DEC8] bg-[#FFFDF9] p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-150 text-xs ${
+            align === 'right' ? 'right-0' : 'left-0'
+          }`}
         >
           {options.map((opt) => {
             const isSelected = opt.value === value;

@@ -182,16 +182,21 @@ export function AdminDashboardView({
   return (
     <div className="min-h-screen bg-[#FAF7F2] pb-16 text-[#2D1E16]">
       {/* Top Header Bar */}
-      <header className="bg-white border-b border-[#E8DFC8] px-4 md:px-8 py-3.5 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/logo-banner.png" alt="SENDOKecil" className="h-9 object-contain" />
-            <span className="hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FAF2E6] text-[#6B4226] border border-[#E8DFC8]">
-              Dashboard Owner
-            </span>
+      <header className="bg-white border-b border-[#E8DFC8] px-3 md:px-8 py-3 sticky top-0 z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          {/* Brand Logo & Name */}
+          <div className="flex items-center gap-2.5 min-w-0 shrink-0">
+            <img src="/logo-square.png" alt="SENDOKecil" className="h-8 w-8 rounded-lg object-contain shrink-0" />
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-sm sm:text-base text-[#3E271B] tracking-tight">SENDOKecil</span>
+              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF2E6] text-[#6B4226] border border-[#E8DFC8]">
+                Owner
+              </span>
+            </div>
             <button
+              type="button"
               onClick={() => setShowSupabaseModal(true)}
-              className={`hidden md:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border transition ${
+              className={`hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border transition ${
                 supabaseConnected
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                   : 'bg-amber-50 text-amber-800 border-amber-300'
@@ -202,32 +207,33 @@ export function AdminDashboardView({
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Quick Header Navigation */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
+              type="button"
               onClick={onSwitchToCustomer}
-              className="py-1.5 px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+              className="py-1.5 px-2.5 sm:px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+              title="Lihat Menu Pemesanan Customer"
             >
-              <ShoppingBag className="w-3.5 h-3.5" /> Lihat Menu Customer
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Menu Customer</span>
             </button>
 
             <button
+              type="button"
               onClick={() => setShowProductModal(true)}
-              className="py-1.5 px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+              className="py-1.5 px-2.5 sm:px-3 rounded-xl border border-[#DCCBB8] bg-[#FAF8F5] hover:bg-[#F3ECE0] text-[#5A3E2C] text-xs font-semibold flex items-center gap-1.5 transition"
+              title="Kelola Menu & Varian Produk"
             >
-              <Layers className="w-3.5 h-3.5" /> Kelola Produk
+              <Layers className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Kelola Produk</span>
             </button>
 
             <button
-              onClick={() => setShowNewOrderModal(true)}
-              className="py-1.5 px-3 rounded-xl bg-[#6B4226] hover:bg-[#54331C] text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-            >
-              <Plus className="w-3.5 h-3.5" /> + Order Manual
-            </button>
-
-            <button
+              type="button"
               onClick={onLogout}
-              title="Keluar"
-              className="p-2 rounded-xl text-red-600 hover:bg-red-50 border border-red-200 transition"
+              title="Keluar / Logout"
+              className="p-1.5 sm:p-2 rounded-xl text-rose-600 hover:bg-rose-50 border border-rose-200 transition"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -235,77 +241,131 @@ export function AdminDashboardView({
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 space-y-6">
-        {/* Financial Metrics Cards (1:1 square tiles on phone) */}
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Omset Card */}
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#E8DFC8] shadow-xs aspect-square sm:aspect-auto flex flex-col justify-between">
-            <div className="flex items-start justify-between gap-1">
-              <span className="text-[11px] sm:text-xs font-bold text-[#7A5B45] leading-tight">Total Omset</span>
-              <div className="p-1.5 sm:p-2 bg-amber-50 rounded-xl text-[#8C5326] shrink-0">
-                <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+      <main className="max-w-7xl mx-auto px-4 md:px-8 py-5 md:py-6 space-y-5 md:space-y-6">
+        {/* Mobile: 1 Single Master Summary Card (Clean 1 Card Layout instead of 2x2) */}
+        <div className="block md:hidden bg-white rounded-2xl border border-[#E8DFC8] p-4 shadow-xs space-y-3">
+          {/* Hero: Total Omset */}
+          <div className="flex items-start justify-between">
+            <div>
+              <span className="text-[11px] font-bold text-[#7A5B45] uppercase tracking-wider">
+                Total Omset Penjualan
+              </span>
+              <div className="text-2xl font-black text-[#3E271B] mt-0.5 leading-tight">
+                {formatRupiah(totalOmset)}
+              </div>
+              <div className="text-[10px] text-[#7C6353] mt-0.5">
+                Dari {orders.length} transaksi pesanan
               </div>
             </div>
-            <div>
-              <div className="text-base sm:text-2xl font-bold text-[#3E271B] leading-tight">{formatRupiah(totalOmset)}</div>
-              <div className="text-[10px] sm:text-[11px] text-[#7C6353] mt-1">{orders.length} Transaksi</div>
+            <div className="p-2.5 bg-amber-50 rounded-xl text-[#8C5326] border border-amber-200/60 shrink-0">
+              <TrendingUp className="w-5 h-5" />
             </div>
           </div>
 
+          {/* Sub-metrics inside this single card */}
+          <div className="grid grid-cols-3 gap-2 pt-3 border-t border-[#F2ECE4]">
+            {/* Net Profit */}
+            <div className="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-emerald-900 leading-tight">Laba Bersih</span>
+                <span className="text-[8px] font-extrabold px-1 py-0.2 bg-emerald-200 text-emerald-900 rounded">
+                  {marginPct}%
+                </span>
+              </div>
+              <div className="font-bold text-xs text-emerald-900 mt-1 truncate">
+                {formatRupiah(netProfit)}
+              </div>
+            </div>
+
+            {/* Total HPP */}
+            <div
+              onClick={() => setShowHppModal(true)}
+              className="p-2.5 rounded-xl bg-[#FAF6F0] border border-[#E8DEC8] flex flex-col justify-between cursor-pointer hover:border-[#8C5326] transition"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-[#7A5B45] leading-tight">Total HPP</span>
+                <Calculator className="w-2.5 h-2.5 text-[#8C5326]" />
+              </div>
+              <div className="font-bold text-xs text-rose-700 mt-1 truncate">
+                {formatRupiah(totalHpp)}
+              </div>
+            </div>
+
+            {/* Total Gabin */}
+            <div className="p-2.5 rounded-xl bg-[#FAF6F0] border border-[#E8DEC8] flex flex-col justify-between">
+              <span className="text-[9px] font-bold text-[#7A5B45] leading-tight">Kue Terjual</span>
+              <div className="font-bold text-xs text-[#3E271B] mt-1">
+                {formatNumber(totalPcs)} <span className="text-[9px] font-normal text-gray-500">pcs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop: 4 Sleek Metric Cards (md and up) */}
+        <div className="hidden md:grid md:grid-cols-4 gap-4">
+          {/* Omset Card */}
+          <div className="bg-white p-4.5 rounded-2xl border border-[#E8DFC8] shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#7A5B45]">Total Omset (Penjualan)</span>
+              <div className="p-2 bg-amber-50 rounded-xl text-[#8C5326]">
+                <TrendingUp className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl font-bold text-[#3E271B] mt-2">{formatRupiah(totalOmset)}</div>
+            <div className="text-[11px] text-[#7C6353] mt-1">Dari {orders.length} transaksi</div>
+          </div>
+
           {/* HPP Card */}
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#E8DFC8] shadow-xs aspect-square sm:aspect-auto flex flex-col justify-between">
-            <div className="flex items-start justify-between gap-1">
-              <span className="text-[11px] sm:text-xs font-bold text-[#7A5B45] leading-tight">Total HPP Bahan</span>
+          <div className="bg-white p-4.5 rounded-2xl border border-[#E8DFC8] shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#7A5B45]">Total HPP (Bahan & Cup)</span>
               <button
                 type="button"
                 onClick={() => setShowHppModal(true)}
-                className="p-1.5 sm:p-2 bg-stone-100 hover:bg-stone-200 rounded-xl text-stone-700 transition shrink-0"
+                className="p-2 bg-stone-100 hover:bg-stone-200 rounded-xl text-stone-700 transition"
                 title="Kelola HPP"
               >
-                <Calculator className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Calculator className="w-4 h-4" />
               </button>
             </div>
-            <div>
-              <div className="text-base sm:text-2xl font-bold text-rose-700 leading-tight">{formatRupiah(totalHpp)}</div>
+            <div className="text-2xl font-bold text-rose-700 mt-2">{formatRupiah(totalHpp)}</div>
+            <div className="text-[11px] text-[#7C6353] mt-1 flex items-center justify-between">
+              <span>Biaya pokok terhitung</span>
               <button
                 type="button"
                 onClick={() => setShowHppModal(true)}
-                className="text-[10px] sm:text-[11px] text-[#8C5326] underline font-semibold mt-1 block"
+                className="text-[#8C5326] underline font-semibold"
               >
-                Resep Terhitung
+                Edit Resep
               </button>
             </div>
           </div>
 
           {/* Net Profit Card */}
-          <div className="bg-emerald-50/70 p-3.5 sm:p-5 rounded-2xl border border-emerald-200 shadow-xs aspect-square sm:aspect-auto flex flex-col justify-between">
-            <div className="flex items-start justify-between gap-1">
-              <span className="text-[11px] sm:text-xs font-bold text-emerald-900 leading-tight">Penjualan Bersih</span>
-              <span className="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-emerald-200 text-emerald-900 shrink-0">
-                {marginPct}%
+          <div className="bg-emerald-50/70 p-4.5 rounded-2xl border border-emerald-200 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-900">Penjualan Bersih (Laba)</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200 text-emerald-900">
+                Margin {marginPct}%
               </span>
             </div>
-            <div>
-              <div className="text-base sm:text-2xl font-bold text-emerald-900 leading-tight">{formatRupiah(netProfit)}</div>
-              <div className="text-[10px] sm:text-[11px] text-emerald-700 mt-1 font-medium">Laba Bersih</div>
-            </div>
+            <div className="text-2xl font-bold text-emerald-900 mt-2">{formatRupiah(netProfit)}</div>
+            <div className="text-[11px] text-emerald-700 mt-1">Omset - Total HPP Bahan</div>
           </div>
 
           {/* Total Pcs Card */}
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#E8DFC8] shadow-xs aspect-square sm:aspect-auto flex flex-col justify-between">
-            <div className="flex items-start justify-between gap-1">
-              <span className="text-[11px] sm:text-xs font-bold text-[#7A5B45] leading-tight">Total Gabin</span>
-              <div className="p-1.5 sm:p-2 bg-[#FAF5EC] rounded-xl text-[#6B4226] shrink-0">
-                <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <div className="bg-white p-4.5 rounded-2xl border border-[#E8DFC8] shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#7A5B45]">Total Gabin Terjual</span>
+              <div className="p-2 bg-[#FAF5EC] rounded-xl text-[#6B4226]">
+                <Package className="w-4 h-4" />
               </div>
             </div>
-            <div>
-              <div className="text-base sm:text-2xl font-bold text-[#3E271B] leading-tight">
-                {formatNumber(totalPcs)} <span className="text-xs font-normal text-gray-500">pcs</span>
-              </div>
-              <div className="text-[10px] text-[#7C6353] mt-1 truncate">
-                {Object.keys(variantBreakdown).length} Varian
-              </div>
+            <div className="text-2xl font-bold text-[#3E271B] mt-2">
+              {formatNumber(totalPcs)} <span className="text-xs font-normal text-gray-500">pcs</span>
+            </div>
+            <div className="text-[11px] text-[#7C6353] mt-1 truncate">
+              {Object.keys(variantBreakdown).length} Varian Aktif
             </div>
           </div>
         </div>
@@ -532,7 +592,7 @@ export function AdminDashboardView({
 
                           {/* Fulfillment status dropdown */}
                           <td className="py-3 px-3 text-center">
-                            <div className="w-28 mx-auto">
+                            <div className="w-32 mx-auto">
                               <CustomSelect
                                 value={order.fulfillmentStatus}
                                 onChange={(val) => onUpdateOrderStatus(order.id, val as any)}
