@@ -48,80 +48,112 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
   const itemsSummary = order.items.map((it) => `${it.quantity}x ${it.productName}`).join(', ');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl rounded-2xl bg-[#FFFDF9] border border-[#E8DEC8] p-6 shadow-2xl flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
+      <div 
+        role="dialog"
+        aria-modal="true"
+        className="relative w-full max-w-xl rounded-2xl bg-[#FFFDF9] border border-[#E8DEC8] p-4 sm:p-6 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#E8DEC8]">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-[#F3ECE0] rounded-xl text-[#6B4226]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E8DEC8] shrink-0 gap-2">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className="p-2 bg-[#F3ECE0] rounded-xl text-[#6B4226] shrink-0">
               {type === 'shipping_label' ? <Tag className="w-5 h-5" /> : <Heart className="w-5 h-5" />}
             </div>
-            <div>
-              <h3 className="font-bold text-[#3E271B]">Cetak Sticker & Kartu Ucapan</h3>
-              <p className="text-xs text-[#7C6353]">Plain modular design (siap custom desain nantinya)</p>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-sm sm:text-base text-[#3E271B] truncate">Cetak Sticker & Kartu Ucapan</h3>
+              <p className="text-[11px] sm:text-xs text-[#7C6353] truncate">Format label box (10×7.5cm) & kartu ucapan siap cetak</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1.5 text-[#7C6353] hover:text-[#3E271B] rounded-full hover:bg-[#F3ECE0] transition"
+            aria-label="Tutup"
+            className="p-2 text-[#7C6353] hover:text-[#3E271B] rounded-full hover:bg-[#F3ECE0] transition shrink-0 ml-1"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Toggles */}
-        <div className="my-3 grid grid-cols-2 gap-3">
+        {/* Responsive Toggles: Stack on Mobile, 2-cols on Tablet/Desktop */}
+        <div className="my-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5 shrink-0">
           {/* Format Type */}
-          <div className="flex bg-[#F6F0E6] p-1 rounded-xl border border-[#E5DAC8]">
-            <button
-              onClick={() => setType('shipping_label')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
-                type === 'shipping_label' ? 'bg-[#6B4226] text-white shadow-sm' : 'text-[#5A3E2C]'
-              }`}
-            >
-              <Tag className="w-3.5 h-3.5" /> Label Pengiriman
-            </button>
-            <button
-              onClick={() => setType('greeting_card')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
-                type === 'greeting_card' ? 'bg-[#6B4226] text-white shadow-sm' : 'text-[#5A3E2C]'
-              }`}
-            >
-              <Heart className="w-3.5 h-3.5" /> Kartu Ucapan
-            </button>
+          <div>
+            <span className="block text-[10px] sm:text-[11px] font-bold text-[#6B4226] mb-1 uppercase tracking-wider">
+              1. Jenis Cetakan
+            </span>
+            <div className="flex bg-[#F6F0E6] p-1 rounded-xl border border-[#E5DAC8] text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setType('shipping_label')}
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg flex items-center justify-center gap-1.5 transition ${
+                  type === 'shipping_label'
+                    ? 'bg-[#6B4226] text-white shadow-xs font-bold'
+                    : 'text-[#5A3E2C] hover:text-[#3E271B]'
+                }`}
+              >
+                <Tag className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Label Alamat Box</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setType('greeting_card')}
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg flex items-center justify-center gap-1.5 transition ${
+                  type === 'greeting_card'
+                    ? 'bg-[#6B4226] text-white shadow-xs font-bold'
+                    : 'text-[#5A3E2C] hover:text-[#3E271B]'
+                }`}
+              >
+                <Heart className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Kartu Ucapan</span>
+              </button>
+            </div>
           </div>
 
           {/* Sheet Layout */}
-          <div className="flex bg-[#F6F0E6] p-1 rounded-xl border border-[#E5DAC8]">
-            <button
-              onClick={() => setLayout('single')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
-                layout === 'single' ? 'bg-[#6B4226] text-white shadow-sm' : 'text-[#5A3E2C]'
-              }`}
-            >
-              <Scissors className="w-3.5 h-3.5" /> 1 Lembar / Tunggal
-            </button>
-            <button
-              onClick={() => setLayout('grid4')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
-                layout === 'grid4' ? 'bg-[#6B4226] text-white shadow-sm' : 'text-[#5A3E2C]'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" /> 4 Kartu per Lembar (A4)
-            </button>
+          <div>
+            <span className="block text-[10px] sm:text-[11px] font-bold text-[#6B4226] mb-1 uppercase tracking-wider">
+              2. Tata Letak Lembar
+            </span>
+            <div className="flex bg-[#F6F0E6] p-1 rounded-xl border border-[#E5DAC8] text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setLayout('single')}
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg flex items-center justify-center gap-1.5 transition ${
+                  layout === 'single'
+                    ? 'bg-[#6B4226] text-white shadow-xs font-bold'
+                    : 'text-[#5A3E2C] hover:text-[#3E271B]'
+                }`}
+              >
+                <Scissors className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">1 Lembar Tunggal</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setLayout('grid4')}
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg flex items-center justify-center gap-1.5 transition ${
+                  layout === 'grid4'
+                    ? 'bg-[#6B4226] text-white shadow-xs font-bold'
+                    : 'text-[#5A3E2C] hover:text-[#3E271B]'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">4 Kartu / A4</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Form Inputs for Greeting Card */}
+        {/* Form Inputs for Greeting Card (scrollable if needed) */}
         {type === 'greeting_card' && (
-          <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-2 bg-[#FAF5ED] p-3 rounded-xl border border-[#E8DFD3] text-xs">
+          <div className="mb-3 grid grid-cols-1 sm:grid-cols-3 gap-2 bg-[#FAF5ED] p-3 rounded-xl border border-[#E8DFD3] text-xs shrink-0 max-h-48 overflow-y-auto">
             <div>
               <label className="block font-semibold text-[#5A3E2C] mb-1">Judul / Headline</label>
               <input
                 type="text"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] transition"
               />
             </div>
             <div>
@@ -130,7 +162,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
                 type="text"
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] transition"
               />
             </div>
             <div>
@@ -139,26 +171,26 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
                 type="text"
                 value={sender}
                 onChange={(e) => setSender(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] transition"
               />
             </div>
-            <div className="md:col-span-3">
+            <div className="sm:col-span-3">
               <label className="block font-semibold text-[#5A3E2C] mb-1">Isi Pesan Ucapan</label>
               <textarea
                 rows={2}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] relative focus:z-10 transition-all resize-none"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#DCCBB8] bg-white text-[#3E271B] focus:outline-none focus:ring-2 focus:ring-[#6B4226]/30 focus:border-[#6B4226] transition resize-none"
               />
             </div>
           </div>
         )}
 
-        {/* Live Preview Paper */}
-        <div className="flex-1 overflow-y-auto p-4 bg-[#F2ECE4] rounded-xl flex justify-center items-center min-h-[220px]">
+        {/* Live Preview Paper - Fully Mobile Responsive Width (w-full max-w-[340px]) */}
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 bg-[#F2ECE4] rounded-xl flex justify-center items-center min-h-[200px]">
           {type === 'shipping_label' ? (
             /* Shipping Label Preview */
-            <div className="w-[360px] bg-[#FFFAF5] border-2 border-[#4A2E1B] rounded-lg p-3 shadow-md text-xs font-sans">
+            <div className="w-full max-w-[340px] bg-[#FFFAF5] border-2 border-[#4A2E1B] rounded-lg p-3 sm:p-3.5 shadow-md text-xs font-sans">
               <div className="text-[9px] text-gray-500 text-center mb-1 border-b border-dashed border-gray-300 pb-0.5">
                 ✂ Garis Potong Label Box (10 × 7.5 cm) ✂
               </div>
@@ -208,7 +240,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
             </div>
           ) : (
             /* Greeting Card Preview */
-            <div className="w-[360px] bg-[#FCF9F2] border-2 border-[#8C5E38] rounded-lg p-4 shadow-md text-xs relative font-sans text-center">
+            <div className="w-full max-w-[340px] bg-[#FCF9F2] border-2 border-[#8C5E38] rounded-lg p-3 sm:p-4 shadow-md text-xs relative font-sans text-center">
               <div className="text-[9px] text-gray-400 mb-1 border-b border-dashed border-gray-300 pb-0.5">
                 ✂ Garis Potong Kartu (10 × 7 cm) ✂
               </div>
@@ -218,7 +250,7 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
               <div className="font-serif font-bold text-base text-[#4A2E1B]">{headline}</div>
               <div className="text-[11px] text-[#63432B] mt-0.5">Untuk: <b>{recipient}</b></div>
 
-              <div className="my-3 text-[11px] italic text-[#382417] leading-relaxed px-4">
+              <div className="my-3 text-[11px] italic text-[#382417] leading-relaxed px-3">
                 "{message}"
               </div>
 
@@ -234,19 +266,21 @@ export function StickerPrintModal({ order, isOpen, onClose }: StickerPrintModalP
         </div>
 
         {/* Footer actions */}
-        <div className="flex gap-2 pt-3 border-t border-[#E8DEC8]">
+        <div className="flex items-center gap-2 pt-3 border-t border-[#E8DEC8] shrink-0">
           <button
+            type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl border border-[#DCCBB8] bg-white hover:bg-[#F7F2EA] text-[#5A3E2C] font-semibold text-xs transition"
+            className="py-2.5 px-4 rounded-xl border border-[#DCCBB8] bg-white hover:bg-[#F7F2EA] text-[#5A3E2C] font-semibold text-xs sm:text-sm transition shrink-0"
           >
             Tutup
           </button>
           <button
+            type="button"
             onClick={handlePrint}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-[#6B4226] hover:bg-[#54331C] text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow transition"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-[#6B4226] hover:bg-[#54331C] active:scale-[0.99] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow transition"
           >
-            <Printer className="w-4 h-4" />
-            Cetak Sekarang ({layout === 'grid4' ? '4 per Lembar' : 'Tunggal'})
+            <Printer className="w-4 h-4 shrink-0" />
+            <span className="truncate">Cetak Sekarang ({layout === 'grid4' ? '4 per Lembar' : 'Tunggal'})</span>
           </button>
         </div>
       </div>

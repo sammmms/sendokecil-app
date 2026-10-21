@@ -75,36 +75,37 @@ Simpan di kulkas agar tetap nikmat!
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
       <div 
         role="dialog"
         aria-modal="true"
-        className="relative w-full max-w-lg rounded-2xl bg-[#FFFDF9] border border-[#E8DEC8] p-5 md:p-6 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden"
+        className="relative w-full max-w-lg rounded-2xl bg-[#FFFDF9] border border-[#E8DEC8] p-4 sm:p-6 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-[#E8DEC8]">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-[#F3ECE0] rounded-xl text-[#6B4226]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E8DEC8] shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="p-2 bg-[#F3ECE0] rounded-xl text-[#6B4226] shrink-0">
               <Printer className="w-5 h-5" />
             </div>
-            <div>
-              <h3 className="font-bold text-base md:text-lg text-[#3E271B]">Cetak Struk Thermal</h3>
-              <p className="text-xs text-[#7C6353]">Monokrom kasir 58mm / 80mm · Dapat dibagikan sebagai gambar</p>
+            <div className="min-w-0">
+              <h3 className="font-bold text-sm sm:text-base text-[#3E271B] truncate">Cetak Struk Thermal</h3>
+              <p className="text-[11px] sm:text-xs text-[#7C6353] truncate">Monokrom kasir 58mm / 80mm · Bagikan via WA</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-[#7C6353] hover:text-[#3E271B] rounded-full hover:bg-[#F3ECE0] transition"
+            aria-label="Tutup"
+            className="p-1.5 text-[#7C6353] hover:text-[#3E271B] rounded-full hover:bg-[#F3ECE0] transition shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Paper format selector */}
-        <div className="my-3 flex items-center justify-between bg-[#F6F0E6] p-2 rounded-xl border border-[#E5DAC8] text-xs">
-          <span className="font-semibold text-[#5A3E2C] pl-1">Format Lebar Kertas:</span>
-          <div className="w-56">
+        <div className="my-2.5 sm:my-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 bg-[#F6F0E6] p-2 sm:p-2.5 rounded-xl border border-[#E5DAC8] text-xs shrink-0">
+          <span className="font-bold text-[#5A3E2C] pl-1">Format Lebar Kertas:</span>
+          <div className="w-full sm:w-56">
             <CustomSelect
               value={width}
               onChange={(val) => setWidth(val as ReceiptWidth)}
@@ -118,10 +119,10 @@ Simpan di kulkas agar tetap nikmat!
         </div>
 
         {/* Pure Monochrome Thermal Preview Paper (Real Black & White) */}
-        <div className="flex-1 overflow-y-auto p-4 bg-[#EBE5DB] rounded-xl flex justify-center">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 bg-[#EBE5DB] rounded-xl flex justify-center items-start">
           <div
-            className={`bg-white shadow-md border border-neutral-300 p-5 font-mono text-black text-xs transition-all select-text leading-tight ${
-              width === '58mm' ? 'w-[280px]' : width === '80mm' ? 'w-[360px]' : 'w-[440px]'
+            className={`bg-white shadow-md border border-neutral-300 p-4 sm:p-5 font-mono text-black text-xs transition-all select-text leading-tight w-full ${
+              width === '58mm' ? 'max-w-[280px]' : width === '80mm' ? 'max-w-[340px]' : 'max-w-[420px]'
             }`}
           >
             {/* Header */}

@@ -124,7 +124,7 @@ export function CustomSelect({
       {isOpen && (
         <div
           role="listbox"
-          className={`absolute z-50 mt-1 min-w-[150px] max-h-60 overflow-y-auto rounded-xl border border-[#E8DEC8] bg-[#FFFDF9] p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-150 text-xs ${
+          className={`absolute z-50 mt-1 w-full min-w-full sm:min-w-[180px] max-h-60 overflow-y-auto rounded-xl border border-[#E8DEC8] bg-[#FFFDF9] p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-150 text-xs ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
